@@ -39,7 +39,7 @@ it, see [Building it yourself](#building-it-yourself).
 
 ### 1. Install Homebaked on your phone
 
-1. On your phone, open **[the latest release](https://github.com/alinobrasil/homebaked/releases/latest)**
+1. On your phone, open **[the latest release](https://github.com/alinobrasil/homebaked-apps/releases/latest)**
    and tap **`Homebaked.apk`** to download it.
 2. Open the downloaded file. Android asks whether your browser may install apps: tap
    **Settings**, turn on **Allow from this source**, go back, and tap **Install**.
@@ -54,7 +54,7 @@ it, see [Building it yourself](#building-it-yourself).
    `Documents/My Apps`, and choose it.
 3. Paste this message and send it:
 
-   > Install the Homebaked skill from https://github.com/alinobrasil/homebaked
+   > Install the Homebaked skill from https://github.com/alinobrasil/homebaked-apps
 
 4. Claude shows what it's about to do and asks for permission. Allow it. When it's done,
    it tells you the skill is installed.
@@ -352,6 +352,11 @@ only way out is to uninstall (losing all apps and their data). Put the key's det
 `~/.gradle/gradle.properties`, never in the repository: `HOMEBAKED_STORE_FILE`,
 `HOMEBAKED_STORE_PASSWORD`, `HOMEBAKED_KEY_ALIAS`, `HOMEBAKED_KEY_PASSWORD`.
 
+**Checking a downloaded APK.** Official releases are signed with this certificate (SHA-256):
+`b0:75:bb:77:15:dc:2b:f2:ed:dd:c0:ad:9e:14:50:8a:28:79:77:d9:5a:8c:4a:0a:5c:07:fe:1b:31:bb:7c:93`.
+Check with `apksigner verify --print-certs Homebaked-<version>.apk`; each release also lists the
+APK's own SHA-256.
+
 **Renaming.** The name, app id and link scheme live in `android/gradle.properties`
 (`BRAND_NAME`, `BRAND_APP_ID`, `BRAND_SCHEME`) and at the top of `scripts/homebaked.py`.
 
@@ -364,9 +369,9 @@ emulator with the real script; the test plan is in [RELEASE-PLAN.md](RELEASE-PLA
 
 When someone asks you to install the Homebaked skill from this repository:
 
-1. Get the repository: `git clone --depth 1 https://github.com/alinobrasil/homebaked` into a
+1. Get the repository: `git clone --depth 1 https://github.com/alinobrasil/homebaked-apps` into a
    temporary folder. If git isn't installed, download
-   `https://github.com/alinobrasil/homebaked/archive/refs/heads/main.zip` and unzip it.
+   `https://github.com/alinobrasil/homebaked-apps/archive/refs/heads/main.zip` and unzip it.
 2. Copy the folder `skill/homebaked` to the personal skills folder:
    `~/.claude/skills/homebaked` (on Windows, `%USERPROFILE%\.claude\skills\homebaked`).
    Replace an existing copy if there is one (that's how the skill is updated).

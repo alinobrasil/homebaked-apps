@@ -5,7 +5,7 @@ something anyone can use: an Android app plus a Claude Code skill, linked by a Q
 pushing over Wi-Fi.
 
 > **Name: Homebaked** (decided 2026-10-21, renamed from the working name Homemade). Package
-> `app.homebaked`, link scheme `homebaked://`, repo `github.com/alinobrasil/homebaked`. The name
+> `app.homebaked`, link scheme `homebaked://`, repo `github.com/alinobrasil/homebaked-apps`. The name
 > lives in `android/gradle.properties` (`BRAND_*`) and the constants at the top of
 > `skill/homebaked/scripts/homebaked.py`.
 

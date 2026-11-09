@@ -11,3 +11,6 @@ __pycache__/
 # Your own apps live in apps/ and stay on your computer; only the empty folder is in the repo.
 apps/*
 !apps/save-apps-in-this-folder
+
+# Built APKs to attach to GitHub Releases
+release/
