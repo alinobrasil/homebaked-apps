@@ -7,6 +7,20 @@ apps. You describe a simple app (a tip calculator, a chore chart, a flashcard ga
 kid) and Claude builds it and puts it on your Android phone. Nothing else is in it: no
 ads, no trackers, nothing collecting your data in the background. It's yours.
 
+### Why I made it: apps for my kids
+
+Most apps in the app store are full of ads, often with overstimulating or harmful content,
+and full of traps that get kids to tap their way into a paid subscription. I wanted apps my
+kids could use without any of that, so I make them myself. With Homebaked, **you decide what
+your kids get to use.** For example:
+
+- **A language learning app**, with lessons, stars and the phone reading words out loud.
+- **Classic games** like backgammon, solitaire and minesweeper, **with a cap on how many
+  games a day**, and the option to **unlock 5 more games by finishing a language lesson**.
+
+Whatever you want, you decide. Just talk to Claude, and it goes to your phone over Wi-Fi in an
+instant.
+
 **Using Homebaked:** [Requirements](#requirements) · [Setup](#setup) ·
 [Making apps](#making-apps) · [Your data and privacy](#your-data-and-privacy) ·
 [Good to know](#good-to-know) · [If something goes wrong](#if-something-goes-wrong) ·
