@@ -40,7 +40,7 @@ it, see [Building it yourself](#building-it-yourself).
 ### 1. Install Homebaked on your phone
 
 1. On your phone, open **[the latest release](https://github.com/alinobrasil/homebaked-apps/releases/latest)**
-   and tap **`Homebaked.apk`** to download it.
+   and tap **`Homebaked-<version>.apk`** (for example `Homebaked-0.2.0.apk`) to download it.
 2. Open the downloaded file. Android asks whether your browser may install apps: tap
    **Settings**, turn on **Allow from this source**, go back, and tap **Install**.
 3. If Google Play Protect warns that the app is unrecognized, tap **More details → Install

@@ -267,7 +267,7 @@ Done, builds clean (`android/`, debug APK):
 ### M4: Release
 - [ ] New release keystore for Homebaked (not the AliGame key), kept off the repo; props
       `HOMEBAKED_STORE_FILE` etc. in `~/.gradle/gradle.properties`
-- [ ] GitHub repo, Releases with `Homebaked.apk` + SHA-256
+- [x] GitHub repo (private for now), release v0.2.0 with `Homebaked-0.2.0.apk` + SHA-256, signed with the new Homebaked key (2026-11-09)
 - [ ] Version scheme: APK `versionName` + protocol `v=1`; skill checks `/hello` version and
       tells the user to update the phone app if it's too old
 - [ ] Friends-and-family beta (5–10 non-technical people) following only the README
