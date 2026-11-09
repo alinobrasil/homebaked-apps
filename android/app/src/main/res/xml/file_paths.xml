@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only this one cache folder is ever shared: photos being taken and files being shared. -->
+<paths>
+    <cache-path name="shared" path="shared/"/>
+</paths>

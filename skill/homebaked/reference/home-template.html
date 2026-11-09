@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Home</title>
+<!--
+  Starter home screen for Homebaked. Push it as the app folder "home" (index.html + manifest.json).
+  Change the look freely; keep the HomeBridge calls. See spec.md section 11.
+-->
+<style>
+  :root { --tile: 60px; --gap: 14px; --bg: #f6f3ee; --fg: #2b2620; --muted: #8a8177; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100dvh; padding: 8px 14px 24px; background: var(--bg); color: var(--fg);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  input { width: 100%; padding: 10px 14px; border-radius: 12px; border: 0; background: #e9e4dc;
+          font-size: 16px; color: var(--fg); margin-bottom: 6px; }
+  h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+       margin: 14px 0 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tile), 1fr)); gap: var(--gap) 10px; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .icon { position: relative; width: var(--tile); height: var(--tile); border-radius: 16px; display: grid;
+          place-items: center; font-size: calc(var(--tile) * .48); color: #fff; font-weight: 700;
+          background-size: cover; background-position: center; }
+  .online { position: absolute; top: -3px; right: -3px; width: 18px; height: 18px; border-radius: 50%;
+            background: #fff; font-size: 10px; display: grid; place-items: center; }
+  .name { font-size: 11px; max-width: calc(var(--tile) + 10px); white-space: nowrap; overflow: hidden;
+          text-overflow: ellipsis; }
+  .empty { color: var(--muted); margin-top: 30px; text-align: center; }
+  .ver { position: fixed; right: 8px; bottom: 6px; font-size: 10px; opacity: .35; }
+</style>
+</head>
+<body>
+  <input id="q" type="search" placeholder="Search apps">
+  <div id="list"></div>
+  <div class="ver">home v1</div>
+<script>
+var H = window.HomeBridge;
+var COLORS = ['#4C6EF5', '#37B24D', '#E8590C', '#9C36B5', '#1098AD', '#F08C00'];
+var ORDER = ['Games', 'Utilities'];
+
+function apps() {
+  if (!H) return [{ id: 'demo', name: 'Demo app', category: 'Games', emoji: '🍪', color: '#E8590C', icon: '', online: false }];
+  try { return JSON.parse(H.apps()); } catch (e) { return []; }
+}
+function section(cat) {
+  var c = String(cat || '').trim().toLowerCase();
+  if (c === '' || c === 'game' || c === 'games') return 'Games';
+  if (['utility', 'utilities', 'tool', 'tools'].indexOf(c) >= 0) return 'Utilities';
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+function colorFor(a) {
+  if (a.color) return a.color;
+  var h = 0; for (var i = 0; i < a.name.length; i++) h = (h * 31 + a.name.charCodeAt(i)) | 0;
+  return COLORS[Math.abs(h) % COLORS.length];
+}
+
+function tile(a) {
+  var el = document.createElement('div'); el.className = 'app';
+  var ic = document.createElement('div'); ic.className = 'icon';
+  ic.style.backgroundColor = colorFor(a);
+  if (a.icon) ic.style.backgroundImage = 'url("' + a.icon + '")';
+  else ic.textContent = a.emoji || a.name.charAt(0).toUpperCase();
+  if (a.online) { var o = document.createElement('div'); o.className = 'online'; o.textContent = '🌐'; ic.appendChild(o); }
+  var nm = document.createElement('div'); nm.className = 'name'; nm.textContent = a.name;
+  el.appendChild(ic); el.appendChild(nm);
+  // Tap opens; long-press shows the phone's own info sheet (what it can reach, delete).
+  var timer = null, long = false;
+  el.addEventListener('pointerdown', function () { long = false; timer = setTimeout(function () { long = true; if (H) H.details(a.id); }, 500); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { el.addEventListener(ev, function () { clearTimeout(timer); }); });
+  el.addEventListener('click', function () { if (!long && H) H.open(a.id); });
+  el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  return el;
+}
+
+function render() {
+  var q = document.getElementById('q').value.trim().toLowerCase();
+  var list = document.getElementById('list'); list.textContent = '';
+  var all = apps().filter(function (a) { return !q || a.name.toLowerCase().indexOf(q) >= 0; });
+  if (!all.length) { var e = document.createElement('div'); e.className = 'empty';
+    e.textContent = q ? 'No app matches.' : 'No apps yet. Ask Claude to make one.'; list.appendChild(e); return; }
+  var groups = {};
+  all.forEach(function (a) { var s = section(a.category); (groups[s] = groups[s] || []).push(a); });
+  var names = ORDER.filter(function (s) { return groups[s]; })
+    .concat(Object.keys(groups).filter(function (s) { return ORDER.indexOf(s) < 0; }).sort());
+  names.forEach(function (s) {
+    var h = document.createElement('h2'); h.textContent = s; list.appendChild(h);
+    var g = document.createElement('div'); g.className = 'grid';
+    groups[s].sort(function (x, y) { return x.name.localeCompare(y.name); }).forEach(function (a) { g.appendChild(tile(a)); });
+    list.appendChild(g);
+  });
+}
+
+document.getElementById('q').addEventListener('input', render);
+window.onAppsChanged = render;   // called by Homebaked when an app is added, updated or removed
+render();
+</script>
+</body>
+</html>

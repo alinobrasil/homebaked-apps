@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Nothing goes to cloud backup: mini-app data never leaves the phone that way.
+  A phone-to-phone transfer (cable or Wi-Fi, when setting up a new phone) still carries
+  everything across, since that stays between your own two devices.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" path="."/>
+        <exclude domain="file" path="."/>
+        <exclude domain="database" path="."/>
+        <exclude domain="sharedpref" path="."/>
+        <exclude domain="external" path="."/>
+    </cloud-backup>
+</data-extraction-rules>

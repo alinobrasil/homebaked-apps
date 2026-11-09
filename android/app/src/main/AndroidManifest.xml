@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- The push server on the phone, the link callback to your computer, and the
+         network hosts a mini-app declares in its manifest. Nothing else. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- Asked only when you tap Scan. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Asked only when a mini-app first tries to listen. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <!--
+      Abilities an app can switch on by listing them under "permissions" in its manifest.json.
+      None is granted at install: each is asked the first time an app that declared it uses it.
+    -->
+    <!-- "location": one position fix while the app is open; never in the background. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- "notifications": reminders. Exact timing only if the person allows it in Settings. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- "overlay": a screen dimmer, only after "Display over other apps" is turned on in Settings. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+    <!--
+      Package visibility, required from API 30 up. Without it the app cannot see any
+      text to speech engine or speech recognizer on the phone.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE"/>
+        </intent>
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
+        </intent>
+    </queries>
+
+    <!--
+      allowBackup=false plus the extraction rules: no cloud backup of anything. A direct
+      phone-to-phone transfer still works, since that never leaves your own devices.
+      Cleartext is needed for the plain-HTTP link callback to your computer on the LAN;
+      mini-apps themselves can only reach the https hosts they declare.
+    -->
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:usesCleartextTraffic="true"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+
+        <!-- Safe Browsing sends URL hashes to Google; mini-apps are local files. -->
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="false"/>
+        <meta-data android:name="android.webkit.WebView.MetricsOptOut" android:value="true"/>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <!-- A QR read by the phone's own camera app opens straight into the link dialog. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="${linkScheme}" android:host="link"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".WebAppActivity" android:exported="false"/>
+
+        <!-- Photos taken and files shared by apps, handed to the camera / share sheet. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
+        </provider>
+
+        <receiver android:name=".ReminderReceiver" android:exported="false"/>
+        <receiver android:name=".BootReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".DimmerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="User-controlled screen dimming overlay"/>
+        </service>
+
+        <!-- The scanner follows the phone's orientation instead of forcing landscape. -->
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation"/>
+
+    </application>
+</manifest>
